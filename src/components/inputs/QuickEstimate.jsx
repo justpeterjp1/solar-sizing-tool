@@ -1,8 +1,11 @@
+import { Form } from "lucide-react"
 
 
 const QuickEstimate = () => {
   return (
-    <div>Quick Estimate</div>
+    <form className="space-y-6">
+        QuickEstimate
+    </form>
   )
 }
 
