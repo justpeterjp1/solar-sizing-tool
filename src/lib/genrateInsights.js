@@ -20,9 +20,6 @@ export function generateInsights(results) {
 
   const { energy, panels, inverter, battery } = results;
 
-  // =========================
-  // WARNINGS (ONLY HIGH IMPACT)
-  // =========================
 
   if (energy > 8000) {
     warnings.push({
