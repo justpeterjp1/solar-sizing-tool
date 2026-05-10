@@ -1,14 +1,69 @@
 import { useState } from "react";
 import { Calculator } from "lucide-react";
 import Button from "../shared/Button";
+import {buildingPresets, estimatedperRoom, optionalEquipmentPresets } from '@/logic/presets.ts'
+import { recommendPanels, recommendBattery, recommendInverter  } from '@/src/logic/solarCalculator'
 
-const QuickEstimate = () => {
+const QuickEstimate = ({onCalculate}) => {
   const [userInput, setUserInput] = useState({
     buildingType: "",
     other: "",
     usageIntensity: "medium",
     optionalEquipment: [],
   });
+
+ function handleQuickEstimate(userInput) {
+
+  const usageMultiplier =
+    usageMultipliers[userInput.usageIntensity];
+
+  let energy = 0;
+
+  // STANDARD BUILDING TYPES
+  if (userInput.buildingType !== "other") {
+
+    energy =
+      buildingPresets[userInput.buildingType] *
+      usageMultiplier;
+  }
+
+  // CUSTOM ROOM INPUT
+  else if (userInput.other) {
+
+    const numOfRooms = parseInt(
+      userInput.other.replace(/\D/g, ""),
+      10
+    );
+
+   energy =
+  numOfRooms *
+  estimatedPerRoom[userInput.usageIntensity];
+  }
+
+  // OPTIONAL EQUIPMENT
+  userInput.optionalEquipment.forEach((equipment) => {
+
+    energy +=
+      optionalEquipmentPresets[equipment] *
+      usageMultiplier;
+  });
+
+  const panels =
+    recommendPanels(energy);
+
+  const battery =
+    recommendBattery(energy);
+
+  const inverter = 
+  recommendInverter(energy);
+
+  onCalculate({
+    energy,
+    panels,
+    inverter,
+    battery,
+  });
+}
 
   function handleSubmit(e) {
     e.preventDefault();

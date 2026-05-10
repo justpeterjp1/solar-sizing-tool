@@ -2,15 +2,15 @@ import CategoryMode from '../inputs/CategoryMode'
 import ManualMode from '../inputs/ManualMode'
 import QuickEstimate from '../inputs/QuickEstimate'
 
-const Tabs = ({ activeTab }) => {
+const Tabs = ({ activeTab, devices, setDevices, onCalculate }) => {
     if (activeTab === 'quick-estimate') {
-        return <QuickEstimate />
+        return <QuickEstimate onCalculate={onCalculate} />
     }
     if (activeTab === 'category-mode') {
         return <CategoryMode />
     }
     if (activeTab === 'advanced-mode') {
-        return <ManualMode />
+        return <ManualMode devices={devices} setDevices={setDevices} />
     }
 }
 

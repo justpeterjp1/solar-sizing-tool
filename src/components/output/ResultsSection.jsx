@@ -1,7 +1,9 @@
 import { Lightbulb } from 'lucide-react'
 import React from 'react'
+import { buildingPresets, estimatedPerRoom, optionalEquipmentPresets } from '@/logic/presets'
 
 const ResultsSection = () => {
+    
   return (
     <div>
          <div className="p-5 bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-lg">

@@ -4,6 +4,7 @@ import Tabs from './Tabs'
 
 const MainLayout = () => {
   const [activeTab, setActiveTab] = useState('quick-estimate')
+  const [devices, setDevices] = useState([]);
 
   function handleTabChange(tab) {
     setActiveTab(tab)
@@ -34,7 +35,7 @@ const MainLayout = () => {
                 </Button>
               </div>
               <div className="p-6">
-                    <Tabs activeTab={activeTab} />
+                    <Tabs activeTab={activeTab} devices={devices} setDevices={setDevices} />
               </div>
             </div>      
           </div>

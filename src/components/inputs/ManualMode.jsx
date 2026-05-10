@@ -4,7 +4,7 @@ import { Card } from "../../components/shared/Card"
 
 
 
-export default function ManualMode() {
+export default function ManualMode({devices, setDevices}) {
   const [deviceInput, setDeviceInput] = useState({
     deviceName: '',
     power: '',
@@ -12,7 +12,7 @@ export default function ManualMode() {
     quantity: ''
   });
 
-  const [devices, setDevices] = useState([]);
+  
 
   function handleSubmit(e) {
     e.preventDefault();
