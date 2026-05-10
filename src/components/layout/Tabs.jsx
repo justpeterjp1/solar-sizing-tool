@@ -1,8 +1,10 @@
+import { useState } from 'react';
 import CategoryMode from '../inputs/CategoryMode'
 import ManualMode from '../inputs/ManualMode'
 import QuickEstimate from '../inputs/QuickEstimate'
 
-const Tabs = ({ activeTab, devices, setDevices, onCalculate }) => {
+const Tabs = ({ activeTab, onCalculate }) => {
+    const [devices, setDevices] = useState([]);
     if (activeTab === 'quick-estimate') {
         return <QuickEstimate onCalculate={onCalculate} />
     }
@@ -11,8 +13,10 @@ const Tabs = ({ activeTab, devices, setDevices, onCalculate }) => {
     }
     if (activeTab === 'advanced-mode') {
         return <ManualMode 
-        devices={devices} 
-        setDevices={setDevices} />
+        onCalculate={onCalculate}
+        devices={devices}
+        setDevices={setDevices}
+         />
     }
 }
 

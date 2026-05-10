@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Plus } from 'lucide-react';
 import { Card } from "../../components/shared/Card"
+import Button from '../shared/Button';
+import { calculateResults } from '@/logic/solarCalculator';
 
-
-
-export default function ManualMode({devices, setDevices, onCalculate}) {
+export default function ManualMode({ onCalculate, devices, setDevices }) { 
   const [deviceInput, setDeviceInput] = useState({
     deviceName: '',
     power: '',
@@ -12,11 +12,19 @@ export default function ManualMode({devices, setDevices, onCalculate}) {
     quantity: ''
   });
 
-  
+  useEffect(() => {
+  console.log("devices updated:", devices);
+}, [devices]);
+
+  function handleManualComputing() {
+    // Implementation for manual computing logic
+
+    onCalculate(devices);
+  }
+
 
   function handleSubmit(e) {
-    e.preventDefault();
-
+     e.preventDefault();
     if (deviceInput.deviceName && deviceInput.power && deviceInput.hours && deviceInput.quantity) {
       const nextDevices = [...devices, deviceInput];
       setDevices(nextDevices);
@@ -30,8 +38,22 @@ export default function ManualMode({devices, setDevices, onCalculate}) {
       });
     }
   }
-
   console.log(devices)
+
+
+  // function onUpdateDevice(index, updatedDevice) {
+  //   setDevices(prev => prev.map((device, i) => i === index ? updatedDevice : device));
+  // }
+  function handleManualComputing(devices) {
+      let energy = devices.reduce((total, device) => {
+        return total + (device.power * device.hours * device.quantity);
+      }, 0);
+      
+      const calculatedResults = calculateResults(energy)
+
+      onCalculate(calculatedResults);
+
+  }
 
   function onRemoveDevice(index) {
     setDevices(prev => prev.filter((_, i) => i !== index));
@@ -63,10 +85,10 @@ export default function ManualMode({devices, setDevices, onCalculate}) {
               id="power"
               type="number"
               value={deviceInput.power}
-              onChange={(e) => { setDeviceInput({ ...deviceInput, power: e.target.value }) }}
+              onChange={(e) => { setDeviceInput({ ...deviceInput, power: parseFloat(e.target.value) || 0 }) }}
               placeholder="100"
               min="0"
-              step="0.1"
+              step="1"
               className="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#DC143C] focus:border-transparent transition-shadow"
             />
           </div>
@@ -79,11 +101,11 @@ export default function ManualMode({devices, setDevices, onCalculate}) {
               id="hours"
               type="number"
               value={deviceInput.hours}
-              onChange={(e) => { setDeviceInput({ ...deviceInput, hours: e.target.value }) }}
+              onChange={(e) => { setDeviceInput({ ...deviceInput, hours: parseFloat(e.target.value) || 0 }) }}
               placeholder="8"
               min="0"
               max="24"
-              step="0.1"
+              step="1"
               className="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#DC143C] focus:border-transparent transition-shadow"
             />
           </div>
@@ -96,7 +118,7 @@ export default function ManualMode({devices, setDevices, onCalculate}) {
               id="quantity"
               type="number"
               value={deviceInput.quantity}
-              onChange={(e) => { setDeviceInput({ ...deviceInput, quantity: e.target.value }) }}
+              onChange={(e) => { setDeviceInput({ ...deviceInput, quantity: Number(e.target.value) || 1 }) }}
               placeholder="1"
               min="1"
               className="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#DC143C] focus:border-transparent transition-shadow"
@@ -124,9 +146,16 @@ export default function ManualMode({devices, setDevices, onCalculate}) {
                 onRemove={() => onRemoveDevice(index)}
               />
             ))}
+
           </div>
         </div>
       )}
+      { devices.length >= 2 && (
+        <Button 
+          onClick={() => handleManualComputing(devices)}
+          className='w-full text-white mt-4 p-3 rounded-lg flex items-center justify-center gap-2 transition-colors shadow-sm"'
+          variant='secondary'
+        >Analyse system Specs</Button>)}
     </div>
   );
 }
