@@ -2,7 +2,7 @@ import{ useState } from 'react'
 import Button from '../shared/Button'
 import Tabs from './Tabs'
 
-const MainLayout = () => {
+const MainLayout = ({ onCalculate }) => {
   const [activeTab, setActiveTab] = useState('quick-estimate')
   const [devices, setDevices] = useState([]);
 
@@ -35,7 +35,11 @@ const MainLayout = () => {
                 </Button>
               </div>
               <div className="p-6">
-                    <Tabs activeTab={activeTab} devices={devices} setDevices={setDevices} />
+                    <Tabs 
+                    activeTab={activeTab}
+                    onCalculate={onCalculate} 
+                    devices={devices} 
+                    setDevices={setDevices} />
               </div>
             </div>      
           </div>

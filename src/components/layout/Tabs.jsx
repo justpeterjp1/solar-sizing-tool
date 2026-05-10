@@ -7,10 +7,12 @@ const Tabs = ({ activeTab, devices, setDevices, onCalculate }) => {
         return <QuickEstimate onCalculate={onCalculate} />
     }
     if (activeTab === 'category-mode') {
-        return <CategoryMode />
+        return <CategoryMode onCalculate={onCalculate} />
     }
     if (activeTab === 'advanced-mode') {
-        return <ManualMode devices={devices} setDevices={setDevices} />
+        return <ManualMode 
+        devices={devices} 
+        setDevices={setDevices} />
     }
 }
 

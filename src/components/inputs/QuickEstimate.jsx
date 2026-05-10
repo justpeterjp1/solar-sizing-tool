@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Calculator } from "lucide-react";
 import Button from "../shared/Button";
-import {buildingPresets, estimatedperRoom, optionalEquipmentPresets } from '@/logic/presets.ts'
-import { recommendPanels, recommendBattery, recommendInverter  } from '@/src/logic/solarCalculator'
+import { buildingPresets, estimatedPerRoom, optionalEquipmentPresets, usageMultipliers } from '@/logic/presets'
+import { calculateResults } from '@/logic/solarCalculator'
 
-const QuickEstimate = ({onCalculate}) => {
+const QuickEstimate = ({ onCalculate }) => {
   const [userInput, setUserInput] = useState({
     buildingType: "",
     other: "",
@@ -12,82 +12,71 @@ const QuickEstimate = ({onCalculate}) => {
     optionalEquipment: [],
   });
 
- function handleQuickEstimate(userInput) {
+  function handleQuickEstimate(userInput) {
 
-  const usageMultiplier =
-    usageMultipliers[userInput.usageIntensity];
+    const usageMultiplier =
+      usageMultipliers[userInput.usageIntensity];
+      console.log(usageMultiplier)
 
-  let energy = 0;
+    let energy = 0;
 
-  // STANDARD BUILDING TYPES
-  if (userInput.buildingType !== "other") {
+    // STANDARD BUILDING TYPES
+    if (userInput.buildingType !== "other") {
 
-    energy =
-      buildingPresets[userInput.buildingType] *
-      usageMultiplier;
+      energy =
+        buildingPresets[userInput.buildingType] *
+        usageMultiplier;
+    }
+
+    // CUSTOM ROOM INPUT
+    else if (userInput.other) {
+
+      const numOfRooms = parseInt(
+        userInput.other.replace(/\D/g, ""),
+        10
+      );
+
+      energy =
+        numOfRooms *
+        estimatedPerRoom[userInput.usageIntensity];
+    }
+    
+    // OPTIONAL EQUIPMENT
+    userInput.optionalEquipment.forEach((equipment) => {
+
+      energy +=
+        optionalEquipmentPresets[equipment] *
+        usageMultiplier;
+    });
+
+   
+    const calculatedResults = calculateResults(energy)
+  
+
+onCalculate(calculatedResults);
   }
-
-  // CUSTOM ROOM INPUT
-  else if (userInput.other) {
-
-    const numOfRooms = parseInt(
-      userInput.other.replace(/\D/g, ""),
-      10
-    );
-
-   energy =
-  numOfRooms *
-  estimatedPerRoom[userInput.usageIntensity];
-  }
-
-  // OPTIONAL EQUIPMENT
-  userInput.optionalEquipment.forEach((equipment) => {
-
-    energy +=
-      optionalEquipmentPresets[equipment] *
-      usageMultiplier;
-  });
-
-  const panels =
-    recommendPanels(energy);
-
-  const battery =
-    recommendBattery(energy);
-
-  const inverter = 
-  recommendInverter(energy);
-
-  onCalculate({
-    energy,
-    panels,
-    inverter,
-    battery,
-  });
-}
 
   function handleSubmit(e) {
     e.preventDefault();
-      if (!userInput.buildingType) {
-        alert("Please select a building type or specify other");
-        return;
-      } else if (userInput.buildingType === "other" && !userInput.other) {
-        alert("Please specify the other building type");
-        return;
-      }
-      // Confirm no extra optional equipment
-       if (userInput.optionalEquipment.length === 0) {
-    const confirmProceed = window.confirm(
-      "You did not select any optional equipment. Continue anyway?"
-    );
-
-    if (!confirmProceed) {
+    if (!userInput.buildingType) {
+      alert("Please select a building type or specify other");
+      return;
+    } else if (userInput.buildingType === "other" && !userInput.other) {
+      alert("Please specify the other building type");
       return;
     }
-  }
-    console.log("userInput:", userInput);
+    // Confirm no extra optional equipment
+    if (userInput.optionalEquipment.length === 0) {
+      const confirmProceed = window.confirm(
+        "You did not select any optional equipment. Continue anyway?"
+      );
 
-    // temporary debugging
-    // alert(JSON.stringify(userInput, null, 2));
+      if (!confirmProceed) {
+        return;
+      }
+    }
+    console.log("userInput:", userInput);
+    handleQuickEstimate(userInput);
   }
 
   function handleEquipmentChange(equipment, checked) {
@@ -101,7 +90,7 @@ const QuickEstimate = ({onCalculate}) => {
 
   return (
     <form className="space-y-6" onSubmit={handleSubmit}>
-      
+
       {/* Building Type */}
       <div>
         <label
@@ -124,19 +113,19 @@ const QuickEstimate = ({onCalculate}) => {
         >
           <option value="">Select a building type</option>
 
-          <option value="single-room-self-contain">
+          <option value="self-contain">
             Single Room Self Contain
           </option>
 
-          <option value="mini-flat">
+          <option value="1-bedroom">
             Mini Flat (1 Bedroom Apartment)
           </option>
 
-          <option value="2-bedroom-apartment">
+          <option value="2-bedroom">
             2 Bedroom Apartment
           </option>
 
-          <option value="3-bedroom-apartment">
+          <option value="3-bedroom">
             3 Bedroom Apartment
           </option>
 
@@ -187,11 +176,10 @@ const QuickEstimate = ({onCalculate}) => {
                   usageIntensity: intensity,
                 }))
               }
-              className={`py-3 px-4 rounded-lg border-2 transition-all ${
-                userInput.usageIntensity === intensity
+              className={`py-3 px-4 rounded-lg border-2 transition-all ${userInput.usageIntensity === intensity
                   ? "border-[#DC143C] bg-red-50 text-[#DC143C]"
                   : "border-gray-300 bg-white text-gray-700 hover:border-gray-400"
-              }`}
+                }`}
             >
               {intensity.charAt(0).toUpperCase() + intensity.slice(1)}
             </button>
@@ -207,11 +195,11 @@ const QuickEstimate = ({onCalculate}) => {
 
         <div className="space-y-3">
           {[
-            "Refrigerator",
-            "Washing Machine",
-            "Pumping Machine",
-            "Water Heater",
-            "Electric Stove",
+            "refrigerator",
+            "washingMachine",
+            "pumpingMachine",
+            "waterHeater",
+            "electricStove",
           ].map((equipment) => {
             const id = equipment.toLowerCase().replace(/\s/g, "-");
 

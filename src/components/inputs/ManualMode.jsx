@@ -4,7 +4,7 @@ import { Card } from "../../components/shared/Card"
 
 
 
-export default function ManualMode({devices, setDevices}) {
+export default function ManualMode({devices, setDevices, onCalculate}) {
   const [deviceInput, setDeviceInput] = useState({
     deviceName: '',
     power: '',

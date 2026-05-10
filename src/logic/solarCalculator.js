@@ -57,3 +57,23 @@ export function recommendPanels(energy) {
     totalPanelPower / panelWattage
   );
 }
+
+export function calculateResults(energy) {
+  const panels =
+      recommendPanels(energy);
+
+    const battery =
+      recommendBattery(energy);
+    
+    const inverter =
+      recommendInverter(energy);
+   
+    const calculatedResults = {
+  energy,
+  panels,
+  inverter,
+  battery,
+};
+  return calculatedResults;
+
+}

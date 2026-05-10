@@ -6,8 +6,8 @@ import MainLayout from '../components/layout/MainLayout'
 import './App.css'
 
 function App() {
-    const [ results, setResults ] = useState(null);
-
+    const [ results, setResults ] = useState('');
+ 
   return (
     <>
       <Header />

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Lightbulb, Fan, AirVent, Tv, Utensils, Monitor, Droplets, TrendingUp } from 'lucide-react';
-
+import { categoryLoadPreset } from '@/logic/presets'
+import { calculateResults } from '@/logic/solarCalculator';
 
 const categories = [
   { id: 'lighting', label: 'Lighting', icon: Lightbulb },
@@ -12,7 +13,7 @@ const categories = [
   { id: 'water', label: 'Water Pumping', icon: Droplets },
 ];
 
-export default function CategoryMode() {
+export default function CategoryMode({ onCalculate }) {
   const [selections, setSelections] = useState({
     lighting: 'medium',
     fans: 'medium',
@@ -22,6 +23,19 @@ export default function CategoryMode() {
     office: 'low',
     water: 'low',
   });
+
+  function handleCategoryEstimate(selections) {
+     let energy = 0;
+    Object.entries(selections).forEach(([selection, level]) => {
+      energy += categoryLoadPreset[selection][level];
+    });
+
+    const calculatedResults = calculateResults(energy);
+// confirm output is working
+console.log("Calculated Results:", calculatedResults);
+
+onCalculate(calculatedResults);
+  }
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -33,6 +47,8 @@ export default function CategoryMode() {
     if (confirmProceed) {
       console.log("selections:", selections);
     }
+    handleCategoryEstimate(selections);
+
   }
 
   return (
