@@ -4,7 +4,7 @@ import Button from "../shared/Button";
 import { buildingPresets, estimatedPerRoom, optionalEquipmentPresets, usageMultipliers } from '@/logic/presets'
 import { calculateResults } from '@/logic/solarCalculator'
 
-const QuickEstimate = ({ onCalculate, loading, setLoading }) => {
+const QuickEstimate = ({ onCalculate, loading, setLoading, setModal }) => {
   const [error, setError] = useState("");
   const [userInput, setUserInput] = useState({
     buildingType: "",
@@ -14,7 +14,6 @@ const QuickEstimate = ({ onCalculate, loading, setLoading }) => {
   });
 
   function handleQuickEstimate(userInput) {
-
     const usageMultiplier =
       usageMultipliers[userInput.usageIntensity];
       console.log(usageMultiplier)
@@ -62,6 +61,7 @@ const QuickEstimate = ({ onCalculate, loading, setLoading }) => {
 
   function handleSubmit(e) {
     e.preventDefault();
+     setError("");
     if (!userInput.buildingType) {
       setError("Please select a building type or specify other type of building");
       return;
@@ -70,15 +70,7 @@ const QuickEstimate = ({ onCalculate, loading, setLoading }) => {
       return;
     }
     // Confirm no extra optional equipment
-    if (userInput.optionalEquipment.length === 0) {
-      const confirmProceed = window.confirm(
-        "You did not select any optional equipment. Continue anyway?"
-      );
-
-      if (!confirmProceed) {
-        return;
-      }
-    }
+    
     
     handleQuickEstimate(userInput);
   }
@@ -234,6 +226,11 @@ const QuickEstimate = ({ onCalculate, loading, setLoading }) => {
             );
           })}
         </div>
+            {userInput.optionalEquipment.length === 0 && (
+                <p className="text-grey-600 text-sm mt-1">
+                  Hint: For more accurate estimates, include optional appliances like AC or refrigerators.
+                </p>
+              )}
             {error && (
                 <p className="text-red-600 text-sm">
                   {error}

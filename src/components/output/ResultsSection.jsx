@@ -42,7 +42,7 @@ const ResultsSection = ({ results }) => {
           />
         </div>
       </div>
-      <Insights />
+      <Insights results={results} />
     </div>
   )
 }

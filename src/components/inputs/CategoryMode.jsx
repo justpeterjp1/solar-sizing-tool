@@ -45,13 +45,7 @@ export default function CategoryMode({ onCalculate, error, loading, setLoading }
   function handleSubmit(e) {
     e.preventDefault();
 
-    const confirmProceed = window.confirm(
-      "Please confirm your selections..."
-    );
-
-    
     handleCategoryEstimate(selections);
-
   }
 
   return (
