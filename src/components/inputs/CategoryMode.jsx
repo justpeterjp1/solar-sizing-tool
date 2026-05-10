@@ -13,7 +13,7 @@ const categories = [
   { id: 'water', label: 'Water Pumping', icon: Droplets },
 ];
 
-export default function CategoryMode({ onCalculate }) {
+export default function CategoryMode({ onCalculate, error, loading, setLoading }) {
   const [selections, setSelections] = useState({
     lighting: 'medium',
     fans: 'medium',
@@ -31,22 +31,25 @@ export default function CategoryMode({ onCalculate }) {
     });
 
     const calculatedResults = calculateResults(energy);
-// confirm output is working
-console.log("Calculated Results:", calculatedResults);
+  // confirm output is working
+  console.log("Calculated Results:", calculatedResults);
 
-onCalculate(calculatedResults);
+  setLoading(true)
+    
+    setTimeout(() => {
+      setLoading(false);
+      onCalculate(calculatedResults);
+    }, 2000);
   }
 
   function handleSubmit(e) {
     e.preventDefault();
 
     const confirmProceed = window.confirm(
-      "Please confirm your selections. Continue anyway?"
+      "Please confirm your selections..."
     );
 
-    if (confirmProceed) {
-      console.log("selections:", selections);
-    }
+    
     handleCategoryEstimate(selections);
 
   }
@@ -90,13 +93,18 @@ onCalculate(calculatedResults);
           );
         })}
       </div>
+              {error && (
+                <p className="text-red-600 text-sm">
+                  {error}
+                </p>
+              )}
 
       <button
         type="submit"
         className="w-full bg-[#DC143C] hover:bg-[#B01030] text-white px-6 py-3.5 rounded-lg flex items-center justify-center gap-2 transition-colors shadow-sm"
       >
         <TrendingUp className="w-5 h-5" />
-        Generate Load Estimate
+       {loading ? "Calculating..." : "Generate Load Estimate"}
       </button>
     </form>
   );

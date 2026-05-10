@@ -4,7 +4,8 @@ import { Card } from "../../components/shared/Card"
 import Button from '../shared/Button';
 import { calculateResults } from '@/logic/solarCalculator';
 
-export default function ManualMode({ onCalculate, devices, setDevices }) { 
+export default function ManualMode({ onCalculate, devices, setDevices, loading, setLoading }) { 
+  const [error, setError] = useState("");
   const [deviceInput, setDeviceInput] = useState({
     deviceName: '',
     power: '',
@@ -12,19 +13,13 @@ export default function ManualMode({ onCalculate, devices, setDevices }) {
     quantity: ''
   });
 
-  useEffect(() => {
-  console.log("devices updated:", devices);
-}, [devices]);
-
-  function handleManualComputing() {
-    // Implementation for manual computing logic
-
-    onCalculate(devices);
-  }
-
 
   function handleSubmit(e) {
      e.preventDefault();
+     if(!deviceInput.deviceName || !deviceInput.power || !deviceInput.hours || !deviceInput.quantity) {
+       setError("Please fill in all device details.");
+       return;
+     }
     if (deviceInput.deviceName && deviceInput.power && deviceInput.hours && deviceInput.quantity) {
       const nextDevices = [...devices, deviceInput];
       setDevices(nextDevices);
@@ -51,7 +46,12 @@ export default function ManualMode({ onCalculate, devices, setDevices }) {
       
       const calculatedResults = calculateResults(energy)
 
+      setLoading(true)
+    
+    setTimeout(() => {
+      setLoading(false);
       onCalculate(calculatedResults);
+    }, 2000);
 
   }
 
@@ -63,6 +63,7 @@ export default function ManualMode({ onCalculate, devices, setDevices }) {
     <div className="space-y-6">
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
+          
           <label htmlFor="deviceName" className="block text-sm text-gray-700 mb-2">
             Device Name
           </label>
@@ -88,7 +89,7 @@ export default function ManualMode({ onCalculate, devices, setDevices }) {
               onChange={(e) => { setDeviceInput({ ...deviceInput, power: parseFloat(e.target.value) || 0 }) }}
               placeholder="100"
               min="0"
-              step="1"
+              step="0.1"
               className="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#DC143C] focus:border-transparent transition-shadow"
             />
           </div>
@@ -125,6 +126,18 @@ export default function ManualMode({ onCalculate, devices, setDevices }) {
             />
           </div>
         </div>
+            {error && (
+                <p className="text-red-600 text-sm">
+                  {error}
+                </p>
+              )}
+
+              {devices.length > 0 && devices.length < 2 && (
+            <p className="text-sm text-gray-500">
+              Add more devices to see detailed insights
+              and generate a system analysis
+            </p>
+          )}
 
         <button
           type="submit"
@@ -146,7 +159,6 @@ export default function ManualMode({ onCalculate, devices, setDevices }) {
                 onRemove={() => onRemoveDevice(index)}
               />
             ))}
-
           </div>
         </div>
       )}
@@ -155,7 +167,7 @@ export default function ManualMode({ onCalculate, devices, setDevices }) {
           onClick={() => handleManualComputing(devices)}
           className='w-full text-white mt-4 p-3 rounded-lg flex items-center justify-center gap-2 transition-colors shadow-sm"'
           variant='secondary'
-        >Analyse system Specs</Button>)}
+        >{loading ? "Analyzing system specs..." : "Analyze system Specs"}</Button>)}
     </div>
   );
 }

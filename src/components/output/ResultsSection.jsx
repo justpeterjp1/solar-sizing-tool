@@ -1,6 +1,7 @@
 import React from 'react'
 import { StatCard } from '../shared/StatCard'
 import { Zap, BatteryCharging, Sun, Gauge } from 'lucide-react'
+import Insights from '../ui/Insights'
 
 const ResultsSection = ({ results }) => {
 
@@ -41,6 +42,7 @@ const ResultsSection = ({ results }) => {
           />
         </div>
       </div>
+      <Insights />
     </div>
   )
 }

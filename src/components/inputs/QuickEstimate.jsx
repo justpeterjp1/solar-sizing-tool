@@ -4,7 +4,8 @@ import Button from "../shared/Button";
 import { buildingPresets, estimatedPerRoom, optionalEquipmentPresets, usageMultipliers } from '@/logic/presets'
 import { calculateResults } from '@/logic/solarCalculator'
 
-const QuickEstimate = ({ onCalculate }) => {
+const QuickEstimate = ({ onCalculate, loading, setLoading }) => {
+  const [error, setError] = useState("");
   const [userInput, setUserInput] = useState({
     buildingType: "",
     other: "",
@@ -30,7 +31,6 @@ const QuickEstimate = ({ onCalculate }) => {
 
     // CUSTOM ROOM INPUT
     else if (userInput.other) {
-
       const numOfRooms = parseInt(
         userInput.other.replace(/\D/g, ""),
         10
@@ -48,21 +48,25 @@ const QuickEstimate = ({ onCalculate }) => {
         optionalEquipmentPresets[equipment] *
         usageMultiplier;
     });
-
    
-    const calculatedResults = calculateResults(energy)
-  
+     const calculatedResults = calculateResults(energy)
+    setLoading(true)
 
-onCalculate(calculatedResults);
+    setTimeout(() => {
+      setLoading(false);
+      onCalculate(calculatedResults);
+    }, 2000);
   }
+
+
 
   function handleSubmit(e) {
     e.preventDefault();
     if (!userInput.buildingType) {
-      alert("Please select a building type or specify other");
+      setError("Please select a building type or specify other type of building");
       return;
     } else if (userInput.buildingType === "other" && !userInput.other) {
-      alert("Please specify the other building type");
+      setError("Please specify the other building type and number of rooms");
       return;
     }
     // Confirm no extra optional equipment
@@ -75,7 +79,7 @@ onCalculate(calculatedResults);
         return;
       }
     }
-    console.log("userInput:", userInput);
+    
     handleQuickEstimate(userInput);
   }
 
@@ -195,11 +199,12 @@ onCalculate(calculatedResults);
 
         <div className="space-y-3">
           {[
+            "ac",
             "refrigerator",
-            "washingMachine",
-            "pumpingMachine",
-            "waterHeater",
-            "electricStove",
+            "Washing Machine",
+            "Pumping Machine",
+            "Water Heater",
+            "Electric Stove",
           ].map((equipment) => {
             const id = equipment.toLowerCase().replace(/\s/g, "-");
 
@@ -229,6 +234,11 @@ onCalculate(calculatedResults);
             );
           })}
         </div>
+            {error && (
+                <p className="text-red-600 text-sm">
+                  {error}
+                </p>
+              )}
 
         {/* Submit Button */}
         <Button
@@ -236,7 +246,7 @@ onCalculate(calculatedResults);
           className="w-full bg-[#DC143C] hover:bg-[#B01030] text-white mt-4 p-3 rounded-lg flex items-center justify-center gap-2 transition-colors shadow-sm"
         >
           <Calculator className="w-5 h-5" />
-          Calculate System Requirements
+          {loading ? "Calculating..." : "Calculate System Requirements"}
         </Button>
       </fieldset>
     </form>

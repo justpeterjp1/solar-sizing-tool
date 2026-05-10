@@ -15,10 +15,10 @@ export const estimatedPerRoom = {
 export const optionalEquipmentPresets = {
   refrigerator: 1200,
   ac: 4000,
-  washingMachine: 900,
-  pumpingMachine: 900,
-  waterHeater: 2000,
-  electricStove: 1800,
+  "Washing Machine": 900,
+  "Pumping Machine": 900,
+  "Water Heater": 2000,
+  "Electric Stove": 1800,
 };
 
 export const usageMultipliers = {
