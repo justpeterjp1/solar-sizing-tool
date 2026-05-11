@@ -1,0 +1,24 @@
+<svg width="400" height="100" viewBox="0 0 400 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Sun icon with sage leaf accent -->
+  <circle cx="50" cy="50" r="24" fill="url(#sunGradient)" />
+  <path d="M50 10 L50 16 M50 84 L50 90 M90 50 L84 50 M16 50 L10 50" stroke="#FCD34D" stroke-width="3" stroke-linecap="round" />
+  <path d="M76 24 L71.5 28.5 M28.5 71.5 L24 76 M76 76 L71.5 71.5 M28.5 28.5 L24 24" stroke="#FCD34D" stroke-width="3" stroke-linecap="round" />
+
+  <!-- Sage leaf accent -->
+  <path d="M56 42 Q60 38 64 40 Q66 42 64 46 Q62 48 58 46 Z" fill="#DC2626" opacity="0.9" />
+  <path d="M58 44 L62 42" stroke="#7F1D1D" stroke-width="0.5" />
+
+  <!-- Logo text -->
+  <text x="110" y="60" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="#F59E0B">SUN</text>
+  <text x="210" y="60" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="#DC2626">SAGE</text>
+  <text x="110" y="80" font-family="Arial, sans-serif" font-size="12" fill="#64748B">Solar Calculator</text>
+
+  <!-- Gradients -->
+  <defs>
+    <radialGradient id="sunGradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FEF08A" />
+      <stop offset="50%" stop-color="#FCD34D" />
+      <stop offset="100%" stop-color="#F59E0B" />
+    </radialGradient>
+  </defs>
+</svg>

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Lightbulb, Fan, AirVent, Tv, Utensils, Monitor, Droplets, TrendingUp } from 'lucide-react';
 import { categoryLoadPreset } from '@/logic/presets'
 import { calculateResults } from '@/logic/solarCalculator';
+import { toast } from 'sonner';
 
 const categories = [
   { id: 'lighting', label: 'Lighting', icon: Lightbulb },
@@ -34,12 +35,18 @@ export default function CategoryMode({ onCalculate, error, loading, setLoading }
   // confirm output is working
   console.log("Calculated Results:", calculatedResults);
 
-  setLoading(true)
-    
-    setTimeout(() => {
-      setLoading(false);
-      onCalculate(calculatedResults);
-    }, 2000);
+   setLoading(true);
+      
+      const toastId = toast.loading("Generating energy report...");
+
+      setTimeout(() => {
+        setLoading(false);
+
+        onCalculate(calculatedResults);
+
+          toast.success("Report ready", {
+          id: toastId,
+        }); }, 2500);
   }
 
   function handleSubmit(e) {
@@ -73,7 +80,7 @@ export default function CategoryMode({ onCalculate, error, loading, setLoading }
                     onClick={() =>
                       setSelections({ ...selections, [category.id]: level })
                     }
-                    className={`py-2 px-3 rounded text-sm transition-all ${
+                    className={`py-2 px-3 rounded text-sm transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] ${
                       selections[category.id] === level
                         ? 'bg-[#DC143C] text-white'
                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -95,7 +102,10 @@ export default function CategoryMode({ onCalculate, error, loading, setLoading }
 
       <button
         type="submit"
-        className="w-full bg-[#DC143C] hover:bg-[#B01030] text-white px-6 py-3.5 rounded-lg flex items-center justify-center gap-2 transition-colors shadow-sm"
+        className="w-full bg-[#DC143C] hover:bg-[#B01030]
+         text-white px-6 py-3.5 rounded-lg flex items-center
+         transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] 
+         justify-center gap-2 shadow-sm"
       >
         <TrendingUp className="w-5 h-5" />
        {loading ? "Calculating..." : "Generate Load Estimate"}

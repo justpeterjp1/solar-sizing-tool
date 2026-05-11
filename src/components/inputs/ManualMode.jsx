@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Plus } from 'lucide-react';
 import { Card } from "../../components/shared/Card"
 import Button from '../shared/Button';
 import { calculateResults } from '@/logic/solarCalculator';
+import { toast } from 'sonner';
 
 export default function ManualMode({ onCalculate, devices, setDevices, loading, setLoading }) { 
   const [error, setError] = useState("");
@@ -13,17 +14,19 @@ export default function ManualMode({ onCalculate, devices, setDevices, loading, 
     quantity: ''
   });
 
+ 
 
   function handleSubmit(e) {
      e.preventDefault();
+     setError('')
      if(!deviceInput.deviceName || !deviceInput.power || !deviceInput.hours || !deviceInput.quantity) {
-       setError("Please fill in all device details.");
+       toast.error("Please fill in all device details");
        return;
      }
     if (deviceInput.deviceName && deviceInput.power && deviceInput.hours && deviceInput.quantity) {
       const nextDevices = [...devices, deviceInput];
       setDevices(nextDevices);
-      console.log("New device added:", deviceInput);
+      toast.success(`Device added: ${deviceInput.deviceName}`);
       console.log("devices:", nextDevices);
       setDeviceInput({
         deviceName: '',
@@ -46,17 +49,24 @@ export default function ManualMode({ onCalculate, devices, setDevices, loading, 
       
       const calculatedResults = calculateResults(energy)
 
-      setLoading(true)
-    
-    setTimeout(() => {
-      setLoading(false);
-      onCalculate(calculatedResults);
-    }, 2000);
+      setLoading(true);
+      
+      const toastId = toast.loading("Generating energy report...");
+
+      setTimeout(() => {
+        setLoading(false);
+
+        onCalculate(calculatedResults);
+
+          toast.success("Report ready", {
+          id: toastId,
+        }); }, 2500);
 
   }
 
   function onRemoveDevice(index) {
     setDevices(prev => prev.filter((_, i) => i !== index));
+    toast.info(`Device removed: ${devices[index]?.deviceName}`);
   }
 
   return (
@@ -141,7 +151,9 @@ export default function ManualMode({ onCalculate, devices, setDevices, loading, 
 
         <button
           type="submit"
-          className="w-full bg-[#DC143C] hover:bg-[#B01030] text-white px-6 py-3 rounded-lg flex items-center justify-center gap-2 transition-colors shadow-sm"
+          className="w-full bg-[#DC143C] hover:bg-[#B01030] 
+          transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]
+          text-white px-6 py-3 rounded-lg flex items-center justify-center gap-2 shadow-sm"
         >
           <Plus className="w-5 h-5" />
           Add Device
@@ -165,7 +177,7 @@ export default function ManualMode({ onCalculate, devices, setDevices, loading, 
       { devices.length >= 2 && (
         <Button 
           onClick={() => handleManualComputing(devices)}
-          className='w-full text-white mt-4 p-3 rounded-lg flex items-center justify-center gap-2 transition-colors shadow-sm"'
+          className='w-full text-white mt-4 p-3 rounded-lg flex items-center justify-center gap-2 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-sm"'
           variant='secondary'
         >{loading ? "Analyzing system specs..." : "Analyze system Specs"}</Button>)}
     </div>

@@ -3,6 +3,7 @@ import { Calculator } from "lucide-react";
 import Button from "../shared/Button";
 import { buildingPresets, estimatedPerRoom, optionalEquipmentPresets, usageMultipliers } from '@/logic/presets'
 import { calculateResults } from '@/logic/solarCalculator'
+import { toast } from "sonner";
 
 const QuickEstimate = ({ onCalculate, loading, setLoading, setModal }) => {
   const [error, setError] = useState("");
@@ -12,6 +13,8 @@ const QuickEstimate = ({ onCalculate, loading, setLoading, setModal }) => {
     usageIntensity: "medium",
     optionalEquipment: [],
   });
+
+   const btnAnimate = 'transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]'
 
   function handleQuickEstimate(userInput) {
     const usageMultiplier =
@@ -49,12 +52,19 @@ const QuickEstimate = ({ onCalculate, loading, setLoading, setModal }) => {
     });
    
      const calculatedResults = calculateResults(energy)
-    setLoading(true)
 
-    setTimeout(() => {
-      setLoading(false);
-      onCalculate(calculatedResults);
-    }, 2000);
+      setLoading(true);
+      
+      const toastId = toast.loading("Generating energy report...");
+
+      setTimeout(() => {
+        setLoading(false);
+
+        onCalculate(calculatedResults);
+
+          toast.success("Report ready", {
+          id: toastId,
+        }); }, 2500);
   }
 
 
@@ -63,10 +73,10 @@ const QuickEstimate = ({ onCalculate, loading, setLoading, setModal }) => {
     e.preventDefault();
      setError("");
     if (!userInput.buildingType) {
-      setError("Please select a building type or specify other type of building");
+      toast.error("Please select a building type or specify other type of building");
       return;
     } else if (userInput.buildingType === "other" && !userInput.other) {
-      setError("Please specify the other building type and number of rooms");
+      toast.error("Please specify the other building type and number of rooms");
       return;
     }
     // Confirm no extra optional equipment
@@ -172,7 +182,7 @@ const QuickEstimate = ({ onCalculate, loading, setLoading, setModal }) => {
                   usageIntensity: intensity,
                 }))
               }
-              className={`py-3 px-4 rounded-lg border-2 transition-all ${userInput.usageIntensity === intensity
+              className={`py-3 px-4 rounded-lg border-2 transition-all ${btnAnimate} ${userInput.usageIntensity === intensity
                   ? "border-[#DC143C] bg-red-50 text-[#DC143C]"
                   : "border-gray-300 bg-white text-gray-700 hover:border-gray-400"
                 }`}
