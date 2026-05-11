@@ -16,6 +16,7 @@ const ResultsSection = ({ results }) => {
             unit="Wh/day"
             icon={Zap}
             iconColor="#FFC300"
+            results={results}
           />
           <StatCard
             label="Required Battery Capacity"
@@ -23,6 +24,7 @@ const ResultsSection = ({ results }) => {
             unit="Ah @ 12V"
             icon={BatteryCharging}
             iconColor="#DC143C"
+            results={results}
           />
 
           <StatCard
@@ -31,6 +33,7 @@ const ResultsSection = ({ results }) => {
             unit="× 100W panels"
             icon={Sun}
             iconColor="#FFC300"
+            results={results}
           />
 
           <StatCard
@@ -39,6 +42,7 @@ const ResultsSection = ({ results }) => {
             unit="W"
             icon={Gauge}
             iconColor="#DC143C"
+            results={results}
           />
         </div>
       </div>

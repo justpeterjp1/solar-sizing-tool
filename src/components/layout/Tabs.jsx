@@ -1,16 +1,12 @@
 import { useState } from 'react';
-
+import { motion } from "framer-motion";
 import CategoryMode from '../inputs/CategoryMode';
 import ManualMode from '../inputs/ManualMode';
 import QuickEstimate from '../inputs/QuickEstimate';
 
-import ConfirmModal from '../shared/ConfirmModal';
-
 const Tabs = ({ activeTab, onCalculate }) => {
   const [devices, setDevices] = useState([]);
   const [loading, setLoading] = useState(false);
-
-  const [modal, setModal] = useState(null);
 
   let content;
 
@@ -20,7 +16,6 @@ const Tabs = ({ activeTab, onCalculate }) => {
         loading={loading}
         setLoading={setLoading}
         onCalculate={onCalculate}
-        setModal={setModal}
       />
     );
   }
@@ -48,16 +43,15 @@ const Tabs = ({ activeTab, onCalculate }) => {
   }
 
   return (
-    <>
+    <motion.div
+  key={activeTab}
+  initial={{ opacity: 0, y: 5 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.2 }}
+>
       {content}
 
-      {modal && (
-        <ConfirmModal
-          modal={modal}
-          onClose={() => setModal(null)}
-        />
-      )}
-    </>
+    </motion.div>
   );
 };
 

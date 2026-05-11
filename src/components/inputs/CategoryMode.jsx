@@ -102,6 +102,7 @@ export default function CategoryMode({ onCalculate, error, loading, setLoading }
 
       <button
         type="submit"
+        disabled={loading}
         className="w-full bg-[#DC143C] hover:bg-[#B01030]
          text-white px-6 py-3.5 rounded-lg flex items-center
          transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] 

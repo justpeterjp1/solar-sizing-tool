@@ -1,6 +1,13 @@
-export function StatCard({ label, value, unit, icon: IconComponent, iconColor = '#FFC300' }) {
+import { motion } from "framer-motion";
+
+export function StatCard({ label, value, unit, icon: IconComponent, iconColor = '#FFC300', results }) {
   return (
-    <div className="p-5 bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-lg">
+    <motion.div
+          key={results.energy}
+        initial={{ opacity: 0, y: 10, scale: 0.98 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.7, ease: "easeOut" }}
+     className="  p-5 bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-lg">
       <div className="flex items-start justify-between">
         <div className="flex-1">
           <p className="text-sm text-gray-600 mb-1">{label}</p>
@@ -17,6 +24,6 @@ export function StatCard({ label, value, unit, icon: IconComponent, iconColor = 
           )}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

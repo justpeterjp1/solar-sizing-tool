@@ -31,6 +31,7 @@ const Insights = ({ results }) => {
           {insights.slice(0, 2).map((item, i) => (
             <InfoCard
               key={`ins-${i}`}
+              results={results}
               icon={
                 <Info className="w-5 h-5 text-[#FFC300]" />
               }
@@ -40,14 +41,15 @@ const Insights = ({ results }) => {
         </Section>
       )}
 
-      {/* ========================= */}
+      
       {/* WARNING (MAX 1) */}
-      {/* ========================= */}
+      
       {warnings.length > 0 && (
         <Section title="Warnings">
           {warnings.slice(0, 1).map((item, i) => (
             <InfoCard
               key={`warn-${i}`}
+              results={results}
               icon={
                 <AlertTriangle className="w-5 h-5 text-[#DC143C]" />
               }
@@ -57,13 +59,14 @@ const Insights = ({ results }) => {
         </Section>
       )}
 
-      {/* ========================= */}
+     
       {/* RECOMMENDATIONS (MAX 2) */}
-      {/* ========================= */}
+      
       {recommendations.length > 0 && (
         <Section title="Recommendations">
           {recommendations.slice(0, 2).map((item, i) => (
             <InfoCard
+              results={results}
               key={`rec-${i}`}
               icon={
                 <CircleCheck className="w-5 h-5 text-[#10B981]" />

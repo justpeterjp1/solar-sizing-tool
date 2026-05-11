@@ -237,7 +237,8 @@ const QuickEstimate = ({ onCalculate, loading, setLoading, setModal }) => {
           })}
         </div>
             {userInput.optionalEquipment.length === 0 && (
-                <p className="text-grey-600 text-sm mt-1">
+                <p className="text-sm text-amber-600 bg-amber-50 rounded-lg px-1 py-2 animate-pulse
+">
                   Hint: For more accurate estimates, include optional appliances like AC or refrigerators.
                 </p>
               )}
@@ -250,6 +251,7 @@ const QuickEstimate = ({ onCalculate, loading, setLoading, setModal }) => {
         {/* Submit Button */}
         <Button
           type="submit"
+          disabled={loading}
           className="w-full bg-[#DC143C] hover:bg-[#B01030] text-white mt-4 p-3 rounded-lg flex items-center justify-center gap-2 transition-colors shadow-sm"
         >
           <Calculator className="w-5 h-5" />
